@@ -63,8 +63,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(metadata);
-  } catch (error: any) {
-    console.error("Scrape error:", error.message);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Scrape error:", errorMessage);
     return NextResponse.json(
       { error: "Failed to fetch website metadata" },
       { status: 500 }

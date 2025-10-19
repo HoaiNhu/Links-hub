@@ -102,8 +102,10 @@ export default function AddLinkModal({
 
       onSuccess?.();
       onClose();
-    } catch (error: any) {
-      toast.error(error.message || "Có lỗi xảy ra", { id: submitToast });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Có lỗi xảy ra";
+      toast.error(errorMessage, { id: submitToast });
     }
   };
 

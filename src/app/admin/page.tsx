@@ -4,6 +4,12 @@ import Link from "@/models/Link";
 import User from "@/models/User";
 import Category from "@/models/Category";
 import StatsCard from "@/components/StatsCard";
+import { ILink, ICategory, IUser } from "@/lib/type";
+
+interface PopulatedLink extends Omit<ILink, "category" | "submittedBy"> {
+  category: ICategory;
+  submittedBy: Pick<IUser, "_id" | "name" | "email">;
+}
 
 async function getStats() {
   await connectDB();
@@ -27,7 +33,7 @@ async function getStats() {
     totalUsers,
     totalCategories,
     pendingLinks,
-    recentLinks: JSON.parse(JSON.stringify(recentLinks)),
+    recentLinks: JSON.parse(JSON.stringify(recentLinks)) as PopulatedLink[],
   };
 }
 
@@ -97,8 +103,8 @@ export default async function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {stats.recentLinks.map((link: any) => (
-                <tr key={link._id} className="hover:bg-gray-50">
+              {stats.recentLinks.map((link) => (
+                <tr key={link._id.toString()} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {link.favicon && (

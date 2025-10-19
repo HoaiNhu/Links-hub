@@ -14,10 +14,12 @@ export async function GET(request: NextRequest) {
       .lean();
 
     return NextResponse.json(users);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: error.message },
-      { status: error.message.includes("Forbidden") ? 403 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes("Forbidden") ? 403 : 500 }
     );
   }
 }

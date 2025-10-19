@@ -2,10 +2,15 @@
 import { useEffect, useState } from "react";
 import { HiCheck, HiX, HiExternalLink } from "react-icons/hi";
 import toast from "react-hot-toast";
-import { ILink, ICategory } from "@/lib/type";
+import { ILink, ICategory, IUser } from "@/lib/type";
+
+interface PopulatedLink extends Omit<ILink, "category" | "submittedBy"> {
+  category: ICategory;
+  submittedBy: Pick<IUser, "_id" | "name" | "email">;
+}
 
 export default function PendingLinksPage() {
-  const [links, setLinks] = useState<(ILink & { category: ICategory })[]>([]);
+  const [links, setLinks] = useState<PopulatedLink[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -167,7 +172,7 @@ export default function PendingLinksPage() {
                     </span>
                     <span>
                       Gửi bởi:{" "}
-                      <strong>{(link.submittedBy as any)?.name}</strong>
+                      <strong>{link.submittedBy?.name || "Unknown"}</strong>
                     </span>
                     <span>
                       {new Date(link.createdAt).toLocaleString("vi-VN")}

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { HiMail, HiLockClosed, HiUser } from "react-icons/hi";
-import bcrypt from "bcryptjs";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -58,8 +57,10 @@ export default function RegisterPage() {
       setTimeout(() => {
         router.push("/login");
       }, 1000);
-    } catch (error: any) {
-      toast.error(error.message, { id: registerToast });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Đăng ký thất bại";
+      toast.error(errorMessage, { id: registerToast });
     } finally {
       setLoading(false);
     }

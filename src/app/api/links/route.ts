@@ -13,7 +13,16 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") || "approved";
     const search = searchParams.get("search");
 
-    let query: any = { status };
+    interface QueryFilter {
+      status: string;
+      category?: string;
+      $or?: Array<{
+        title?: { $regex: string; $options: string };
+        description?: { $regex: string; $options: string };
+      }>;
+    }
+
+    const query: QueryFilter = { status };
 
     if (category && category !== "all") {
       query.category = category;
@@ -33,9 +42,11 @@ export async function GET(request: NextRequest) {
       .lean();
 
     return NextResponse.json(links);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("GET /api/links error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -72,8 +83,10 @@ export async function POST(request: NextRequest) {
       .populate("submittedBy", "name email");
 
     return NextResponse.json(populatedLink, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     console.error("POST /api/links error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

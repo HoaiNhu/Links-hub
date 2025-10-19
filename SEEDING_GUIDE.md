@@ -15,10 +15,7 @@
 ### 1. Đảm bảo file `.env` có đúng cấu hình:
 
 ```env
-MONGODB_URI=mongodb+srv://nhoainhu733_db_user:hEU2UboJamgkakg5@link-hub-db.vk0gvwl.mongodb.net/?retryWrites=true&w=majority&appName=LINK-HUB-DB
-NEXTAUTH_SECRET=hoainhu04012004linkhub
-NEXTAUTH_URL=http://localhost:3000
-NODE_ENV=development
+.....
 ```
 
 ### 2. Chạy seed script:

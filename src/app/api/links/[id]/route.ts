@@ -29,10 +29,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json(link);
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: error.message },
-      { status: error.message.includes("Forbidden") ? 403 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes("Forbidden") ? 403 : 500 }
     );
   }
 }
@@ -50,10 +52,12 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json({ success: true, message: "Link deleted" });
-  } catch (error: any) {
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: error.message },
-      { status: error.message.includes("Forbidden") ? 403 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes("Forbidden") ? 403 : 500 }
     );
   }
 }
