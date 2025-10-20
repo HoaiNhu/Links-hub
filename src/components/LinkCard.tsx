@@ -51,11 +51,11 @@ export default function LinkCard({ link }: LinkCardProps) {
           />
         )}
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-lg text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
             {link.title}
           </h3>
           {link.description && (
-            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+            <p className="text-sm text-gray-700 mt-1 line-clamp-2">
               {link.description}
             </p>
           )}
@@ -82,7 +82,7 @@ export default function LinkCard({ link }: LinkCardProps) {
           {link.tags.slice(0, 3).map((tag, index) => (
             <span
               key={index}
-              className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded"
+              className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded font-medium"
             >
               #{tag}
             </span>
@@ -92,7 +92,7 @@ export default function LinkCard({ link }: LinkCardProps) {
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        <div className="flex items-center gap-4 text-sm text-gray-700 font-medium">
           <span className="flex items-center gap-1">
             <HiEye className="w-4 h-4" />
             {link.views || 0}

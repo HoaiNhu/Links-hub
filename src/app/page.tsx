@@ -1,11 +1,17 @@
 import connectDB from "@/lib/mongodb";
 import Link from "@/models/Link";
 import Category from "@/models/Category";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import User from "@/models/User"; // Import để Mongoose đăng ký schema cho populate
 import Navbar from "@/components/Navbar";
 import LinkList from "@/components/LinkList";
 
 async function getData() {
   await connectDB();
+
+  // Đảm bảo User model được load trước khi populate
+  const User = (await import("@/models/User")).default;
+  console.log("User model loaded:", !!User);
 
   const [links, categories] = await Promise.all([
     Link.find({ status: "approved" })

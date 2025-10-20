@@ -8,6 +8,7 @@ import {
   HiUsers,
   HiClock,
   HiChartBar,
+  HiCog,
 } from "react-icons/hi";
 
 const menuItems = [
@@ -35,6 +36,11 @@ const menuItems = [
     name: "Users",
     href: "/admin/users",
     icon: HiUsers,
+  },
+  {
+    name: "Settings",
+    href: "/admin/settings",
+    icon: HiCog,
   },
 ];
 

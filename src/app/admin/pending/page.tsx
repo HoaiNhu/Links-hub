@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { HiCheck, HiX, HiExternalLink } from "react-icons/hi";
-import toast from "react-hot-toast";
 import { ILink, ICategory, IUser } from "@/lib/type";
+import { ApiClient } from "@/lib/api-client";
+import { showToast } from "@/lib/toast-utils";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface PopulatedLink extends Omit<ILink, "category" | "submittedBy"> {
   category: ICategory;
@@ -19,63 +21,48 @@ export default function PendingLinksPage() {
 
   const fetchPendingLinks = async () => {
     try {
-      const res = await fetch("/api/links?status=pending");
-      const data = await res.json();
+      const data = await ApiClient.get<PopulatedLink[]>(
+        "/api/links?status=pending"
+      );
       setLinks(data);
     } catch (error) {
-      toast.error("Không thể tải danh sách");
+      showToast.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleApprove = async (linkId: string) => {
-    const approveToast = toast.loading("Đang duyệt...");
+    const approveToast = showToast.loading("Đang duyệt...");
     try {
-      const res = await fetch(`/api/links/${linkId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          status: "approved",
-          approvedAt: new Date(),
-        }),
+      await ApiClient.put(`/api/links/${linkId}`, {
+        status: "approved",
+        approvedAt: new Date(),
       });
 
-      if (res.ok) {
-        toast.success("Đã duyệt link!", { id: approveToast });
-        fetchPendingLinks();
-      }
+      showToast.success("Đã duyệt link!", approveToast);
+      fetchPendingLinks();
     } catch (error) {
-      toast.error("Có lỗi xảy ra", { id: approveToast });
+      showToast.error(error, approveToast);
     }
   };
 
   const handleReject = async (linkId: string) => {
     if (!confirm("Bạn có chắc muốn từ chối link này?")) return;
 
-    const rejectToast = toast.loading("Đang xử lý...");
+    const rejectToast = showToast.loading("Đang xử lý...");
     try {
-      const res = await fetch(`/api/links/${linkId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "rejected" }),
-      });
+      await ApiClient.put(`/api/links/${linkId}`, { status: "rejected" });
 
-      if (res.ok) {
-        toast.success("Đã từ chối link!", { id: rejectToast });
-        fetchPendingLinks();
-      }
+      showToast.success("Đã từ chối link!", rejectToast);
+      fetchPendingLinks();
     } catch (error) {
-      toast.error("Có lỗi xảy ra", { id: rejectToast });
+      showToast.error(error, rejectToast);
     }
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner className="h-64" />;
   }
 
   return (
@@ -83,7 +70,7 @@ export default function PendingLinksPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Links chờ duyệt</h1>
-        <p className="text-gray-600 mt-1">{links.length} link đang chờ duyệt</p>
+        <p className=" mt-1">{links.length} link đang chờ duyệt</p>
       </div>
 
       {/* Links List */}
@@ -126,7 +113,7 @@ export default function PendingLinksPage() {
                           {link.title}
                         </h3>
                       </div>
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      <p className=" text-sm mb-3 line-clamp-2">
                         {link.description}
                       </p>
                       <a

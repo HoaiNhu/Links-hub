@@ -2,8 +2,9 @@
 import { useState, FormEvent } from "react";
 import { Dialog } from "@headlessui/react";
 import { HiX } from "react-icons/hi";
-import toast from "react-hot-toast";
 import { ICategory, LinkMetadata } from "@/lib/type";
+import { ApiClient } from "@/lib/api-client";
+import { showToast } from "@/lib/toast-utils";
 
 interface AddLinkModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ export default function AddLinkModal({
 
   const fetchMetadata = async () => {
     if (!url) {
-      toast.error("Vui lòng nhập URL");
+      showToast.error("Vui lòng nhập URL");
       return;
     }
 
@@ -36,25 +37,17 @@ export default function AddLinkModal({
     try {
       new URL(url);
     } catch {
-      toast.error("URL không hợp lệ");
+      showToast.error("URL không hợp lệ");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await fetch("/api/metadata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
-
-      if (!res.ok) throw new Error("Failed to fetch");
-
-      const data: LinkMetadata = await res.json();
+      const data = await ApiClient.post<LinkMetadata>("/api/metadata", { url });
       setMetadata(data);
-      toast.success("Đã lấy thông tin website!");
+      showToast.success("Đã lấy thông tin website!");
     } catch (error) {
-      toast.error("Không thể lấy thông tin website");
+      showToast.error(error);
     } finally {
       setLoading(false);
     }
@@ -64,36 +57,27 @@ export default function AddLinkModal({
     e.preventDefault();
 
     if (!metadata || !formData.category) {
-      toast.error("Vui lòng điền đầy đủ thông tin");
+      showToast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
 
-    const submitToast = toast.loading("Đang gửi...");
+    const submitToast = showToast.loading("Đang gửi...");
 
     try {
-      const res = await fetch("/api/links", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url,
-          title: metadata.title,
-          description: metadata.description,
-          image: metadata.image,
-          favicon: metadata.favicon,
-          category: formData.category,
-          tags: formData.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-        }),
+      await ApiClient.post("/api/links", {
+        url,
+        title: metadata.title,
+        description: metadata.description,
+        image: metadata.image,
+        favicon: metadata.favicon,
+        category: formData.category,
+        tags: formData.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || "Failed to submit");
-      }
-
-      toast.success("Đã gửi link! Chờ admin duyệt.", { id: submitToast });
+      showToast.success("Đã gửi link! Chờ admin duyệt.", submitToast);
 
       // Reset form
       setUrl("");
@@ -103,9 +87,7 @@ export default function AddLinkModal({
       onSuccess?.();
       onClose();
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Có lỗi xảy ra";
-      toast.error(errorMessage, { id: submitToast });
+      showToast.error(error, submitToast);
     }
   };
 
@@ -194,9 +176,7 @@ export default function AddLinkModal({
                     <h5 className="font-semibold text-gray-900">
                       {metadata.title}
                     </h5>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {metadata.description}
-                    </p>
+                    <p className="text-sm  mt-1">{metadata.description}</p>
                   </div>
                 </div>
               </div>

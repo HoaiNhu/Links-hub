@@ -28,3 +28,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Override Tailwind default text colors for better readability */
+@layer base {
+  body {
+    @apply text-gray-900;
+  }
+
+  /* Make all text darker by default */
+  p,
+  span,
+  div,
+  li,
+  td,
+  th,
+  label {
+    @apply text-gray-900;
+  }
+
+  /* Secondary text */
+  .text-secondary {
+    @apply text-gray-700;
+  }
+
+  /* Muted text */
+  .text-muted {
+    @apply text-gray-600;
+  }
+}

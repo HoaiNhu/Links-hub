@@ -55,7 +55,7 @@ export default function RegisterPage() {
 
       // Redirect to login
       setTimeout(() => {
-        router.push("/login");
+        router.push("/auth/login");
       }, 1000);
     } catch (error) {
       const errorMessage =
@@ -75,7 +75,7 @@ export default function RegisterPage() {
             <span className="text-white font-bold text-2xl">L</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Đăng ký</h1>
-          <p className="text-gray-600 mt-2">Tạo tài khoản mới 🚀</p>
+          <p className=" mt-2">Tạo tài khoản mới 🚀</p>
         </div>
 
         {/* Form */}
@@ -179,10 +179,10 @@ export default function RegisterPage() {
         </div>
 
         {/* Login Link */}
-        <p className="text-center text-gray-600">
+        <p className="text-center ">
           Đã có tài khoản?{" "}
           <Link
-            href="/login"
+            href="/auth/login"
             className="text-blue-600 font-semibold hover:underline"
           >
             Đăng nhập

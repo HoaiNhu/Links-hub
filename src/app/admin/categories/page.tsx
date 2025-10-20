@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
 import { HiPlus, HiPencil, HiTrash } from "react-icons/hi";
-import toast from "react-hot-toast";
 import { ICategory } from "@/lib/type";
+import { ApiClient } from "@/lib/api-client";
+import { showToast } from "@/lib/toast-utils";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -22,11 +24,10 @@ export default function CategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("/api/categories");
-      const data = await res.json();
+      const data = await ApiClient.get<ICategory[]>("/api/categories");
       setCategories(data);
     } catch (error) {
-      toast.error("Không thể tải danh sách");
+      showToast.error(error);
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ export default function CategoriesPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const submitToast = toast.loading(
+    const submitToast = showToast.loading(
       editingId ? "Đang cập nhật..." : "Đang tạo..."
     );
 
@@ -43,23 +44,21 @@ export default function CategoriesPage() {
       const url = editingId
         ? `/api/categories/${editingId}`
         : "/api/categories";
-      const method = editingId ? "PUT" : "POST";
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        toast.success(editingId ? "Đã cập nhật!" : "Đã tạo danh mục!", {
-          id: submitToast,
-        });
-        fetchCategories();
-        resetForm();
+      if (editingId) {
+        await ApiClient.put(url, formData);
+      } else {
+        await ApiClient.post(url, formData);
       }
+
+      showToast.success(
+        editingId ? "Đã cập nhật!" : "Đã tạo danh mục!",
+        submitToast
+      );
+      fetchCategories();
+      resetForm();
     } catch (error) {
-      toast.error("Có lỗi xảy ra", { id: submitToast });
+      showToast.error(error, submitToast);
     }
   };
 
@@ -77,18 +76,13 @@ export default function CategoriesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa danh mục này?")) return;
 
-    const deleteToast = toast.loading("Đang xóa...");
+    const deleteToast = showToast.loading("Đang xóa...");
     try {
-      const res = await fetch(`/api/categories/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        toast.success("Đã xóa!", { id: deleteToast });
-        fetchCategories();
-      }
+      await ApiClient.delete(`/api/categories/${id}`);
+      showToast.success("Đã xóa!", deleteToast);
+      fetchCategories();
     } catch (error) {
-      toast.error("Có lỗi xảy ra", { id: deleteToast });
+      showToast.error(error, deleteToast);
     }
   };
 
@@ -104,11 +98,7 @@ export default function CategoriesPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <LoadingSpinner className="h-64" />;
   }
 
   return (
@@ -117,7 +107,7 @@ export default function CategoriesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Danh mục</h1>
-          <p className="text-gray-600 mt-1">{categories.length} danh mục</p>
+          <p className=" mt-1">{categories.length} danh mục</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -245,9 +235,7 @@ export default function CategoriesPage() {
               />
             </div>
             {category.description && (
-              <p className="text-sm text-gray-600 mb-4">
-                {category.description}
-              </p>
+              <p className="text-sm  mb-4">{category.description}</p>
             )}
             <div className="flex gap-2">
               <button

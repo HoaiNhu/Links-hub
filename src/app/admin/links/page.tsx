@@ -59,7 +59,7 @@ export default function AdminLinksPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Quản lý Links</h1>
-          <p className="text-gray-600 mt-1">{links.length} links</p>
+          <p className=" mt-1">{links.length} links</p>
         </div>
 
         {/* Filter */}

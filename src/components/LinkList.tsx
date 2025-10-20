@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import LinkCard from "./LinkCard";
 import { ILink, ICategory } from "@/lib/type";
 import { HiSearch } from "react-icons/hi";
+import { ApiClient } from "@/lib/api-client";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface LinkListProps {
   initialLinks: (ILink & { category: ICategory })[];
@@ -18,6 +20,7 @@ export default function LinkList({ initialLinks, categories }: LinkListProps) {
   // Fetch links khi filter thay đổi
   useEffect(() => {
     fetchLinks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, searchQuery]);
 
   const fetchLinks = async () => {
@@ -35,8 +38,9 @@ export default function LinkList({ initialLinks, categories }: LinkListProps) {
         params.append("search", searchQuery);
       }
 
-      const res = await fetch(`/api/links?${params}`);
-      const data = await res.json();
+      const data = await ApiClient.get<(ILink & { category: ICategory })[]>(
+        `/api/links?${params}`
+      );
       setLinks(data);
     } catch (error) {
       console.error("Failed to fetch links:", error);
@@ -57,7 +61,7 @@ export default function LinkList({ initialLinks, categories }: LinkListProps) {
             placeholder="Tìm kiếm website..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-500"
           />
         </div>
 
@@ -96,11 +100,7 @@ export default function LinkList({ initialLinks, categories }: LinkListProps) {
       </div>
 
       {/* Loading */}
-      {loading && (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      )}
+      {loading && <LoadingSpinner className="py-12" />}
 
       {/* Links Grid */}
       {!loading && links.length > 0 && (
@@ -114,7 +114,9 @@ export default function LinkList({ initialLinks, categories }: LinkListProps) {
       {/* Empty State */}
       {!loading && links.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Không tìm thấy website nào</p>
+          <p className="text-gray-700 text-lg font-medium">
+            Không tìm thấy website nào
+          </p>
         </div>
       )}
     </div>

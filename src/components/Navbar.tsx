@@ -5,6 +5,8 @@ import Link from "next/link";
 import { HiPlus, HiMenu, HiX, HiUser, HiLogout, HiCog } from "react-icons/hi";
 import AddLinkModal from "./AddLinkModal";
 import { ICategory } from "@/lib/type";
+import { useSettings } from "@/contexts/SettingsContext";
+import { DEFAULT_ROUTES } from "@/lib/settings-config";
 
 interface NavbarProps {
   categories: ICategory[];
@@ -12,8 +14,12 @@ interface NavbarProps {
 
 export default function Navbar({ categories }: NavbarProps) {
   const { data: session } = useSession();
+  const { settings } = useSettings();
   const [showAddModal, setShowAddModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Safety check: use default routes if settings.routes is undefined
+  const routes = settings?.routes || DEFAULT_ROUTES;
 
   return (
     <>
@@ -43,7 +49,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   {/* Admin Link */}
                   {session.user?.role === "admin" && (
                     <Link
-                      href="/admin"
+                      href={routes.adminPath}
                       className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <HiCog className="w-5 h-5" />
@@ -54,16 +60,16 @@ export default function Navbar({ categories }: NavbarProps) {
                   {/* User Menu */}
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-semibold text-gray-900">
                         {session.user?.name}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs  font-medium">
                         {session.user?.role === "admin" ? "👑 Admin" : "User"}
                       </p>
                     </div>
                     <button
                       onClick={() => signOut()}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                       title="Đăng xuất"
                     >
                       <HiLogout className="w-5 h-5" />
@@ -73,13 +79,13 @@ export default function Navbar({ categories }: NavbarProps) {
               ) : (
                 <div className="flex items-center gap-3">
                   <Link
-                    href="/login"
+                    href={routes.loginPath}
                     className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium"
                   >
                     Đăng nhập
                   </Link>
                   <Link
-                    href="/register"
+                    href={routes.registerPath}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   >
                     Đăng ký
@@ -121,7 +127,7 @@ export default function Navbar({ categories }: NavbarProps) {
 
                   {session.user?.role === "admin" && (
                     <Link
-                      href="/admin"
+                      href={routes.adminPath}
                       className="w-full flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
                     >
                       <HiCog className="w-5 h-5" />
@@ -140,13 +146,13 @@ export default function Navbar({ categories }: NavbarProps) {
               ) : (
                 <>
                   <Link
-                    href="/login"
+                    href={routes.loginPath}
                     className="w-full block px-4 py-3 text-center border border-gray-300 rounded-lg hover:bg-gray-50"
                   >
                     Đăng nhập
                   </Link>
                   <Link
-                    href="/register"
+                    href={routes.registerPath}
                     className="w-full block px-4 py-3 text-center bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                   >
                     Đăng ký
