@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -29,30 +25,28 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Override Tailwind default text colors for better readability */
-@layer base {
-  body {
-    @apply text-gray-900;
-  }
+/* Override default text colors for better readability */
+body {
+  color: #111827; /* gray-900 */
+}
 
-  /* Make all text darker by default */
-  p,
-  span,
-  div,
-  li,
-  td,
-  th,
-  label {
-    @apply text-gray-900;
-  }
+/* Make all text darker by default */
+p,
+span,
+div,
+li,
+td,
+th,
+label {
+  color: #111827; /* gray-900 */
+}
 
-  /* Secondary text */
-  .text-secondary {
-    @apply text-gray-700;
-  }
+/* Secondary text */
+.text-secondary {
+  color: #374151; /* gray-700 */
+}
 
-  /* Muted text */
-  .text-muted {
-    @apply text-gray-600;
-  }
+/* Muted text */
+.text-muted {
+  color: #4b5563; /* gray-600 */
 }

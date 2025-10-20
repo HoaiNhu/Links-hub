@@ -3,16 +3,17 @@ import connectDB from "@/lib/mongodb";
 import Link from "@/models/Link";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     await connectDB();
 
-    await Link.findByIdAndUpdate(params.id, {
+    const { id } = await params;
+    await Link.findByIdAndUpdate(id, {
       $inc: { clicks: 1 },
     });
 

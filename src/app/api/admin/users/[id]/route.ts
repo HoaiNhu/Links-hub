@@ -4,9 +4,9 @@ import User from "@/models/User";
 import { requireAdmin } from "@/lib/auth";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
@@ -14,10 +14,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     await connectDB();
     await requireAdmin();
 
+    const { id } = await params;
     const { role } = await request.json();
 
     const user = await User.findByIdAndUpdate(
-      params.id,
+      id,
       { role },
       { new: true }
     ).select("-password");

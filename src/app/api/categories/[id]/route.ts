@@ -4,9 +4,9 @@ import Category from "@/models/Category";
 import { requireAdmin } from "@/lib/auth";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // PUT - Update category
@@ -15,6 +15,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     await connectDB();
     await requireAdmin();
 
+    const { id } = await params;
     const data = await request.json();
 
     // Generate slug from name if name changed
@@ -22,7 +23,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       data.slug = data.name.toLowerCase().replace(/\s+/g, "-");
     }
 
-    const category = await Category.findByIdAndUpdate(params.id, data, {
+    const category = await Category.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });
@@ -48,7 +49,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     await connectDB();
     await requireAdmin();
 
-    const category = await Category.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
       return NextResponse.json(

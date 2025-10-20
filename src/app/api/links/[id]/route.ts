@@ -4,9 +4,9 @@ import Link from "@/models/Link";
 import { requireAdmin } from "@/lib/auth";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // PUT - Update link (Admin only)
@@ -15,9 +15,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     await connectDB();
     await requireAdmin();
 
+    const { id } = await params;
     const data = await request.json();
 
-    const link = await Link.findByIdAndUpdate(params.id, data, {
+    const link = await Link.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     })
@@ -45,7 +46,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     await connectDB();
     await requireAdmin();
 
-    const link = await Link.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const link = await Link.findByIdAndDelete(id);
 
     if (!link) {
       return NextResponse.json({ error: "Link not found" }, { status: 404 });
