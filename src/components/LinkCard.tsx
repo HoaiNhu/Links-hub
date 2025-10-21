@@ -34,11 +34,11 @@ export default function LinkCard({ link }: LinkCardProps) {
   return (
     <div
       ref={cardRef}
-      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-5 border border-gray-100 group"
+      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-5 border border-gray-100 group h-full flex flex-col"
     >
       {/* Thumbnail */}
       {link.image && (
-        <div className="relative h-48 mb-4 rounded-md overflow-hidden bg-gray-100">
+        <div className="relative h-48 mb-4 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
           <Image
             src={link.image}
             alt={link.title}
@@ -49,60 +49,63 @@ export default function LinkCard({ link }: LinkCardProps) {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex items-start gap-3 mb-3">
-        {link.favicon && (
-          <img
-            src={link.favicon}
-            alt=""
-            className="w-6 h-6 rounded flex-shrink-0"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        )}
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
-            {link.title}
-          </h3>
-          {link.description && (
-            <p className="text-sm text-gray-700 mt-1 line-clamp-2">
-              {link.description}
-            </p>
+      {/* Content - flex-grow để chiếm hết không gian còn lại */}
+      <div className="flex-grow flex flex-col">
+        {/* Header */}
+        <div className="flex items-start gap-3 mb-3">
+          {link.favicon && (
+            <img
+              src={link.favicon}
+              alt=""
+              className="w-6 h-6 rounded flex-shrink-0"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
           )}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+              {link.title}
+            </h3>
+            {link.description && (
+              <p className="text-sm text-gray-700 mt-1 line-clamp-2">
+                {link.description}
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Category Badge */}
+        <div className="mb-4">
+          <span
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium"
+            style={{
+              backgroundColor: link.category?.color + "20",
+              color: link.category?.color || "#3b82f6",
+            }}
+          >
+            {link.category?.icon && <span>{link.category.icon}</span>}
+            {link.category?.name}
+          </span>
+        </div>
+
+        {/* Tags */}
+        {link.tags && link.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {link.tags.slice(0, 3).map((tag, index) => (
+              <span
+                key={index}
+                className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded font-medium"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Category Badge */}
-      <div className="mb-4">
-        <span
-          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium"
-          style={{
-            backgroundColor: link.category?.color + "20",
-            color: link.category?.color || "#3b82f6",
-          }}
-        >
-          {link.category?.icon && <span>{link.category.icon}</span>}
-          {link.category?.name}
-        </span>
-      </div>
-
-      {/* Tags */}
-      {link.tags && link.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {link.tags.slice(0, 3).map((tag, index) => (
-            <span
-              key={index}
-              className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded font-medium"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+      {/* Footer - luôn ở dưới cùng */}
+      <div className="flex items-center justify-between pt-4 border-t border-gray-100 flex-shrink-0">
         <div className="flex items-center gap-4 text-sm text-gray-700 font-medium">
           <span className="flex items-center gap-1" title="Views">
             <HiEye className="w-4 h-4" />
