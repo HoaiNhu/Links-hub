@@ -19,8 +19,8 @@ export default withAuth(
       authorized: ({ token, req }) => {
         // Allow access to auth pages without token
         if (
-          req.nextUrl.pathname.startsWith("/login") ||
-          req.nextUrl.pathname.startsWith("/register")
+          req.nextUrl.pathname.startsWith("/auth/login") ||
+          req.nextUrl.pathname.startsWith("/auth/register")
         ) {
           return true;
         }
@@ -37,5 +37,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*", "/login", "/register"],
+  matcher: ["/admin/:path*", "/auth/login", "/auth/register"],
 };

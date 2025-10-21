@@ -39,7 +39,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold mb-4">🔗 LinksHub</h1>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-white-100 mb-8">
             Tổng hợp những website hữu ích cho developers và designers
           </p>
           <div className="flex items-center justify-center gap-4">

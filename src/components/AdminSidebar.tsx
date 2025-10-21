@@ -48,7 +48,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen p-6">
+    <aside className="w-64 text-grey-700 min-h-screen p-6">
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold">Admin Panel</h2>

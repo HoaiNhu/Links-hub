@@ -11,7 +11,7 @@ export default async function AdminLayout({
 
   // Check if user is admin
   if (!user || user.role !== "admin") {
-    redirect("/login");
+    redirect("/auth/login");
   }
 
   return (
