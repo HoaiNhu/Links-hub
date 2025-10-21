@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import { HiExternalLink, HiEye, HiClock } from "react-icons/hi";
+import { HiExternalLink, HiEye, HiClock, HiCursorClick } from "react-icons/hi";
 import { ILink, ICategory } from "@/lib/type";
+import { useViewTracking } from "@/hooks/useViewTracking";
 
 interface LinkCardProps {
   link: ILink & {
@@ -10,6 +11,13 @@ interface LinkCardProps {
 }
 
 export default function LinkCard({ link }: LinkCardProps) {
+  // Track views khi card xuất hiện trên màn hình
+  const cardRef = useViewTracking({
+    linkId: link._id.toString(),
+    threshold: 0.5, // 50% card phải visible
+    trackOnce: true, // Chỉ track 1 lần
+  });
+
   const handleClick = async () => {
     try {
       // Tăng số lượt click
@@ -24,7 +32,10 @@ export default function LinkCard({ link }: LinkCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-5 border border-gray-100 group">
+    <div
+      ref={cardRef}
+      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-5 border border-gray-100 group"
+    >
       {/* Thumbnail */}
       {link.image && (
         <div className="relative h-48 mb-4 rounded-md overflow-hidden bg-gray-100">
@@ -93,11 +104,15 @@ export default function LinkCard({ link }: LinkCardProps) {
       {/* Footer */}
       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
         <div className="flex items-center gap-4 text-sm text-gray-700 font-medium">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1" title="Views">
             <HiEye className="w-4 h-4" />
             {link.views || 0}
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1" title="Clicks">
+            <HiCursorClick className="w-4 h-4" />
+            {link.clicks || 0}
+          </span>
+          <span className="flex items-center gap-1" title="Created">
             <HiClock className="w-4 h-4" />
             {new Date(link.createdAt).toLocaleDateString("vi-VN")}
           </span>
