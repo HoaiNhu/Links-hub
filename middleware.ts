@@ -9,7 +9,8 @@ export default withAuth(
 
     // Protect admin routes
     if (isAdminRoute && !isAdmin) {
-      return NextResponse.redirect(new URL("/", req.url));
+      // Redirect to login if not admin
+      return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
     return NextResponse.next();
@@ -17,19 +18,22 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ token, req }) => {
+        const pathname = req.nextUrl.pathname;
+
         // Allow access to auth pages without token
         if (
-          req.nextUrl.pathname.startsWith("/auth/login") ||
-          req.nextUrl.pathname.startsWith("/auth/register")
+          pathname.startsWith("/auth/login") ||
+          pathname.startsWith("/auth/register")
         ) {
           return true;
         }
 
         // Require token for admin routes
-        if (req.nextUrl.pathname.startsWith("/admin")) {
+        if (pathname.startsWith("/admin")) {
           return !!token;
         }
 
+        // Allow all other routes
         return true;
       },
     },
