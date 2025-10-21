@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Link from "@/models/Link";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Category from "@/models/Category"; // Import để register schema
 import { getCurrentUser } from "@/lib/auth";
 
 // GET - Lấy danh sách links
