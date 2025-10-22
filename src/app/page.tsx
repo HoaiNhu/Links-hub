@@ -14,26 +14,28 @@ async function getData() {
   await connectDB();
 
   // Đảm bảo User model được load trước khi populate
-  const User = (await import("@/models/User")).default;
-  console.log("User model loaded:", !!User);
+  const UserModel = (await import("@/models/User")).default;
+  console.log("User model loaded:", !!UserModel);
 
-  const [links, categories] = await Promise.all([
+  const [links, categories, totalUsers] = await Promise.all([
     Link.find({ status: "approved" })
       .populate("category")
       .populate("submittedBy", "name")
       .sort({ createdAt: -1 })
       .lean(),
     Category.find().sort({ name: 1 }).lean(),
+    UserModel.countDocuments(),
   ]);
 
   return {
     links: JSON.parse(JSON.stringify(links)),
     categories: JSON.parse(JSON.stringify(categories)),
+    totalUsers,
   };
 }
 
 export default async function HomePage() {
-  const { links, categories } = await getData();
+  const { links, categories, totalUsers } = await getData();
 
   // Calculate total views and clicks
   const totalViews = links.reduce(
@@ -56,7 +58,7 @@ export default async function HomePage() {
       <StatsCounter
         totalLinks={links.length}
         totalCategories={categories.length}
-        totalUsers={0}
+        totalUsers={totalUsers}
         totalViews={totalViews + totalClicks}
       />
 

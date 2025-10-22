@@ -42,33 +42,33 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="neuro-card rounded-3xl p-8 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">L</span>
+          <div className="w-16 h-16 neuro-purple rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-2xl">🔐</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Đăng nhập</h1>
-          <p className="text-gray-600 mt-2">Chào mừng trở lại! 👋</p>
+          <h1 className="text-3xl font-bold text-primary-500">Đăng nhập</h1>
+          <p className="text-primary-600 mt-2">Chào mừng trở lại! 👋</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Email */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Email
+            <label className="block text-sm font-semibold text-primary-500 mb-2">
+              📧 Email
             </label>
-            <div className="relative">
-              <HiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="neuro-input flex items-center gap-3 px-4 py-3">
+              <HiMail className="text-primary-500 w-5 h-5 flex-shrink-0" />
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="flex-1 bg-transparent outline-none text-primary-500 placeholder:text-primary-400"
                 placeholder="your@email.com"
                 required
               />
@@ -77,18 +77,18 @@ export default function LoginPage() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Mật khẩu
+            <label className="block text-sm font-semibold text-primary-500 mb-2">
+              🔒 Mật khẩu
             </label>
-            <div className="relative">
-              <HiLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="neuro-input flex items-center gap-3 px-4 py-3">
+              <HiLockClosed className="text-primary-500 w-5 h-5 flex-shrink-0" />
               <input
                 type="password"
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="flex-1 bg-transparent outline-none text-primary-500 placeholder:text-primary-400"
                 placeholder="••••••••"
                 required
               />
@@ -99,25 +99,25 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className="w-full neuro-purple py-4 rounded-2xl text-white font-bold text-lg hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Đang xử lý..." : "Đăng nhập"}
+            {loading ? "Đang xử lý..." : "🚀 Đăng nhập"}
           </button>
         </form>
 
         {/* Divider */}
         <div className="my-6 flex items-center gap-3">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-sm text-gray-500">hoặc</span>
-          <div className="flex-1 h-px bg-gray-200" />
+          <div className="flex-1 h-px bg-primary-200" />
+          <span className="text-sm text-primary-400">hoặc</span>
+          <div className="flex-1 h-px bg-primary-200" />
         </div>
 
         {/* Register Link */}
-        <p className="text-center text-gray-600">
+        <p className="text-center text-primary-600">
           Chưa có tài khoản?{" "}
           <Link
-            href="/register"
-            className="text-blue-600 font-semibold hover:underline"
+            href="/auth/register"
+            className="text-secondary-500 font-semibold hover:text-secondary-600 transition-colors"
           >
             Đăng ký ngay
           </Link>
@@ -125,7 +125,10 @@ export default function LoginPage() {
 
         {/* Back to Home */}
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+          <Link
+            href="/"
+            className="neuro-button px-6 py-2 rounded-xl text-primary-500 hover:scale-105 transition-all inline-block"
+          >
             ← Về trang chủ
           </Link>
         </div>
