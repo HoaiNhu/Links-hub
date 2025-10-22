@@ -95,23 +95,24 @@ export default function AddLinkModal({
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/40 backdrop-blur-md"
         aria-hidden="true"
       />
 
       {/* Full-screen container */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <Dialog.Panel className="neuro-card rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto bg-light-500">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b sticky top-0 bg-white z-10">
-            <Dialog.Title className="text-2xl font-bold text-gray-900">
-              ✨ Thêm Link Mới
+          <div className="flex items-center justify-between p-6 border-b border-primary-200 sticky top-0 bg-light-500 z-10 rounded-t-3xl">
+            <Dialog.Title className="text-2xl font-bold text-primary-500 flex items-center gap-2">
+              {/* <span className="text-3xl">✨</span> */}
+              Thêm Link Mới
             </Dialog.Title>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="neuro-button p-2 rounded-xl hover:neuro-purple hover:text-white transition-all"
             >
-              <HiX className="w-6 h-6 text-gray-500" />
+              <HiX className="w-6 h-6" />
             </button>
           </div>
 
@@ -119,26 +120,27 @@ export default function AddLinkModal({
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* URL Input */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                🔗 URL Website
+              <label className="block text-sm font-semibold text-primary-500 mb-3 flex items-center gap-2">
+                {/* <span className="text-xl">🔗</span> */}
+                URL Website
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="flex-1 neuro-input px-4 py-3 text-primary-500 placeholder:text-primary-400"
                   required
                 />
                 <button
                   type="button"
                   onClick={fetchMetadata}
                   disabled={loading}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+                  className="neuro-purple px-6 py-3 rounded-xl text-white font-semibold hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all whitespace-nowrap"
                 >
                   {loading ? (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                       Đang tải...
                     </span>
@@ -151,12 +153,13 @@ export default function AddLinkModal({
 
             {/* Preview */}
             {metadata && (
-              <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 bg-blue-50">
-                <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  👀 Preview
+              <div className="neuro-card p-5 rounded-2xl border-2 border-secondary-300">
+                <h4 className="font-bold text-secondary-500 mb-4 flex items-center gap-2 text-lg">
+                  {/* <span className="text-2xl">👀</span> */}
+                  Preview
                 </h4>
                 {metadata.image && (
-                  <div className="relative w-full h-48 mb-3 rounded-lg overflow-hidden">
+                  <div className="relative w-full h-48 mb-4 rounded-xl overflow-hidden neuro-button">
                     <img
                       src={metadata.image}
                       alt=""
@@ -173,10 +176,12 @@ export default function AddLinkModal({
                     />
                   )}
                   <div>
-                    <h5 className="font-semibold text-gray-900">
+                    <h5 className="font-bold text-primary-500 text-lg">
                       {metadata.title}
                     </h5>
-                    <p className="text-sm  mt-1">{metadata.description}</p>
+                    <p className="text-sm text-primary-600 mt-1">
+                      {metadata.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -184,15 +189,16 @@ export default function AddLinkModal({
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                📂 Danh mục
+              <label className="block text-sm font-semibold text-primary-500 mb-3 flex items-center gap-2">
+                {/* <span className="text-xl">📂</span> */}
+                Danh mục
               </label>
               <select
                 value={formData.category}
                 onChange={(e) =>
                   setFormData({ ...formData, category: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full neuro-input px-4 py-3 text-primary-500 cursor-pointer"
                 required
               >
                 <option value="">Chọn danh mục</option>
@@ -206,8 +212,9 @@ export default function AddLinkModal({
 
             {/* Tags */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                🏷️ Tags (tùy chọn)
+              <label className="block text-sm font-semibold text-primary-500 mb-3 flex items-center gap-2">
+                {/* <span className="text-xl">🏷️</span> */}
+                Tags (tùy chọn)
               </label>
               <input
                 type="text"
@@ -216,9 +223,9 @@ export default function AddLinkModal({
                   setFormData({ ...formData, tags: e.target.value })
                 }
                 placeholder="design, tools, ai (cách nhau bởi dấu phẩy)"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full neuro-input px-4 py-3 text-primary-500 placeholder:text-primary-400"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-primary-600 mt-2 ml-1">
                 Nhập các tag cách nhau bởi dấu phẩy
               </p>
             </div>
@@ -227,9 +234,10 @@ export default function AddLinkModal({
             <button
               type="submit"
               disabled={!metadata || !formData.category}
-              className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              className="w-full neuro-purple py-4 rounded-2xl text-white font-bold text-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all shadow-xl flex items-center justify-center gap-2"
             >
-              🚀 Gửi Link
+              {/* <span className="text-2xl">🚀</span> */}
+              Gửi Link
             </button>
           </form>
         </Dialog.Panel>

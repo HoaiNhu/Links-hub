@@ -11,10 +11,13 @@ import {
 
 export default function Footer() {
   const socialLinks = [
-    { icon: FaGithub, href: "https://github.com", label: "GitHub" },
-    { icon: FaTwitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: FaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: FaEnvelope, href: "mailto:contact@linkshub.com", label: "Email" },
+    { icon: FaGithub, href: "https://github.com/HoaiNhu", label: "GitHub" },
+    {
+      icon: FaLinkedin,
+      href: "https://www.linkedin.com/in/nhu-nguyen-37a828177/",
+      label: "LinkedIn",
+    },
+    { icon: FaEnvelope, href: "mailto:nhoainhu733@gmail.com", label: "Email" },
   ];
 
   return (
@@ -42,7 +45,7 @@ export default function Footer() {
             </p>
           </motion.div>
 
-          {/* Quick Links */}
+          {/* Quick Links
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -73,7 +76,7 @@ export default function Footer() {
                 </motion.li>
               ))}
             </ul>
-          </motion.div>
+          </motion.div> */}
 
           {/* Social Media */}
           <motion.div

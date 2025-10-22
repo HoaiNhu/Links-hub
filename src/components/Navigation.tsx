@@ -13,6 +13,8 @@ import {
   FaUserPlus,
   FaSignOutAlt,
   FaPlus,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import AddLinkModal from "./AddLinkModal";
 import { ICategory } from "@/lib/type";
@@ -24,6 +26,7 @@ export default function Navigation() {
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const [isAddLinkModalOpen, setIsAddLinkModalOpen] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const tabs = [
     { name: "Home", path: "/", icon: FaHome },
@@ -38,7 +41,9 @@ export default function Navigation() {
       try {
         const response = await fetch("/api/categories");
         const data = await response.json();
-        setCategories(data.data || []);
+        console.log("Categories fetched:", data);
+        // API trả về trực tiếp array, không có wrapper { data: [...] }
+        setCategories(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
@@ -84,8 +89,8 @@ export default function Navigation() {
             </Link>
           </motion.div>
 
-          {/* Navigation Tabs */}
-          <div className="flex items-center space-x-2">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden md:flex items-center space-x-2">
             {tabs.map((tab) => {
               const isActive = pathname === tab.path;
               const Icon = tab.icon;
@@ -147,7 +152,7 @@ export default function Navigation() {
               title="Thêm link mới"
             >
               <FaPlus className="text-lg" />
-              <span className="font-semibold">Thêm Link</span>
+              <span className="font-semibold hidden lg:inline">Thêm Link</span>
             </motion.button>
 
             {/* Auth Buttons */}
@@ -188,7 +193,9 @@ export default function Navigation() {
                     className="neuro-button px-4 py-3 rounded-xl text-neuro-dark flex items-center space-x-2"
                   >
                     <FaSignInAlt className="text-lg" />
-                    <span className="font-semibold">Đăng nhập</span>
+                    <span className="font-semibold hidden lg:inline">
+                      Đăng nhập
+                    </span>
                   </motion.div>
                 </Link>
 
@@ -200,14 +207,139 @@ export default function Navigation() {
                     className="neuro-purple px-4 py-3 rounded-xl text-white flex items-center space-x-2"
                   >
                     <FaUserPlus className="text-lg" />
-                    <span className="font-semibold">Đăng ký</span>
+                    <span className="font-semibold hidden lg:inline">
+                      Đăng ký
+                    </span>
                   </motion.div>
                 </Link>
               </>
             )}
           </div>
+
+          {/* Mobile Hamburger Menu Button */}
+          <motion.button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            whileTap={{ scale: 0.95 }}
+            className="md:hidden neuro-button p-3 rounded-xl text-neuro-dark"
+          >
+            {mobileMenuOpen ? (
+              <FaTimes className="text-2xl" />
+            ) : (
+              <FaBars className="text-2xl" />
+            )}
+          </motion.button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      <motion.div
+        initial={false}
+        animate={{
+          height: mobileMenuOpen ? "auto" : 0,
+          opacity: mobileMenuOpen ? 1 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+        className="md:hidden overflow-hidden bg-light-500/95 backdrop-blur-md border-t border-primary-200"
+      >
+        <div className="px-4 py-4 space-y-3">
+          {/* Mobile Navigation Tabs */}
+          {tabs.map((tab) => {
+            const isActive = pathname === tab.path;
+            const Icon = tab.icon;
+
+            return (
+              <Link
+                key={tab.path}
+                href={tab.path}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <motion.div
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
+                    isActive
+                      ? "neuro-purple text-white"
+                      : "neuro-button text-neuro-dark"
+                  }`}
+                >
+                  <Icon className="text-lg" />
+                  <span className="font-semibold">{tab.name}</span>
+                </motion.div>
+              </Link>
+            );
+          })}
+
+          {/* Mobile Add Link Button */}
+          <motion.button
+            onClick={() => {
+              handleAddLinkClick();
+              setMobileMenuOpen(false);
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full flex items-center space-x-3 px-4 py-3 neuro-purple text-white rounded-xl"
+          >
+            <FaPlus className="text-lg" />
+            <span className="font-semibold">Thêm Link</span>
+          </motion.button>
+
+          {/* Mobile Auth Buttons */}
+          {session ? (
+            <>
+              {/* Admin Button for mobile */}
+              {session.user?.role === "admin" && (
+                <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center space-x-3 px-4 py-3 neuro-button text-neuro-dark rounded-xl"
+                  >
+                    <FaUser className="text-lg" />
+                    <span className="font-semibold">Admin Panel</span>
+                  </motion.div>
+                </Link>
+              )}
+
+              {/* Logout Button for mobile */}
+              <motion.button
+                onClick={() => {
+                  signOut();
+                  setMobileMenuOpen(false);
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full flex items-center space-x-3 px-4 py-3 neuro-button text-neuro-dark rounded-xl"
+              >
+                <FaSignOutAlt className="text-lg" />
+                <span className="font-semibold">Đăng xuất</span>
+              </motion.button>
+            </>
+          ) : (
+            <>
+              {/* Login Button for mobile */}
+              <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
+                <motion.div
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-3 px-4 py-3 neuro-button text-neuro-dark rounded-xl"
+                >
+                  <FaSignInAlt className="text-lg" />
+                  <span className="font-semibold">Đăng nhập</span>
+                </motion.div>
+              </Link>
+
+              {/* Register Button for mobile */}
+              <Link
+                href="/auth/register"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <motion.div
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-3 px-4 py-3 neuro-purple text-white rounded-xl"
+                >
+                  <FaUserPlus className="text-lg" />
+                  <span className="font-semibold">Đăng ký</span>
+                </motion.div>
+              </Link>
+            </>
+          )}
+        </div>
+      </motion.div>
 
       {/* Add Link Modal */}
       <AddLinkModal

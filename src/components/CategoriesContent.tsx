@@ -68,7 +68,9 @@ export default function CategoriesContent({
       try {
         const response = await fetch("/api/categories");
         const data = await response.json();
-        setAllCategories(data.data || []);
+        console.log("Categories fetched:", data);
+        // API trả về trực tiếp array, không có wrapper { data: [...] }
+        setAllCategories(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
@@ -114,14 +116,14 @@ export default function CategoriesContent({
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1">
-              <div className="relative">
-                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-500" />
+              <div className="neuro-input flex items-center gap-3 px-4 py-3">
+                <FaSearch className="text-primary-500 flex-shrink-0" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm category..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="neuro-input w-full pl-12 pr-4 py-3 text-primary-500 placeholder:text-primary-400"
+                  className="flex-1 bg-transparent outline-none text-primary-500 placeholder:text-primary-400"
                 />
               </div>
             </div>
