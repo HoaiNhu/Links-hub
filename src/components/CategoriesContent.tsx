@@ -58,6 +58,8 @@ export default function CategoriesContent({
     return filtered;
   }, [categories, searchTerm, sortBy]);
 
+  // console.log("filteredCategories:", filteredCategories);
+
   const toggleCategory = (categoryId: string) => {
     setExpandedCategory((prev) => (prev === categoryId ? null : categoryId));
   };

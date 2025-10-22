@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Category from "@/models/Category";
 import { requireAdmin } from "@/lib/auth";
@@ -35,6 +36,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
+
     return NextResponse.json(category);
   } catch (error) {
     const errorMessage =
@@ -58,6 +63,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         { status: 404 }
       );
     }
+
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
 
     return NextResponse.json({ success: true, message: "Category deleted" });
   } catch (error) {

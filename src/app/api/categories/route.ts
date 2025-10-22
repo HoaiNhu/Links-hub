@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Category from "@/models/Category";
 import { requireAdmin } from "@/lib/auth";
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
       ...data,
       slug,
     });
+
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
 
     return NextResponse.json(category, { status: 201 });
   } catch (error) {

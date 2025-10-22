@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Link from "@/models/Link";
 import { getCurrentUser } from "@/lib/auth";
@@ -81,6 +82,10 @@ export async function POST(request: NextRequest) {
     const populatedLink = await Link.findById(link._id)
       .populate("category")
       .populate("submittedBy", "name email");
+
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
 
     return NextResponse.json(populatedLink, { status: 201 });
   } catch (error) {

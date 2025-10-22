@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Link from "@/models/Link";
 import { requireAdmin } from "@/lib/auth";
@@ -29,6 +30,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ error: "Link not found" }, { status: 404 });
     }
 
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
+
     return NextResponse.json(link);
   } catch (error) {
     const errorMessage =
@@ -52,6 +57,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (!link) {
       return NextResponse.json({ error: "Link not found" }, { status: 404 });
     }
+
+    // ✅ Revalidate các pages liên quan
+    revalidatePath("/");
+    revalidatePath("/categories");
 
     return NextResponse.json({ success: true, message: "Link deleted" });
   } catch (error) {
